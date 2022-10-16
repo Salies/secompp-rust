@@ -9,3 +9,4 @@ authors = ["Daniel Serezane <daniel.serezane@unesp.br>", "Gustavo Becelli <gusta
 [dependencies]
 diesel = { version = "2.0.0", features = ["postgres"] }
 dotenvy = "0.15"
+uuid = "1.2.1"
