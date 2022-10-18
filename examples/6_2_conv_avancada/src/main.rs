@@ -16,7 +16,7 @@ fn main() {
 // quem já programou C++ já sacou como funciona ou se não sacou vai sacar agora.
 // Enfim, depois a gente explica melhor, por enquanto é só pra mostrar.
 // NÃO PRECISA COPIAR.
-/*use std::convert::From;
+use std::convert::From;
 
 #[derive(Debug)]
 struct Number {
@@ -32,10 +32,9 @@ impl From<i32> for Number {
 fn main() {
     let num = Number::from(30);
     println!("My number is {:?}", num);
-    // Com a trait From definida para o nosso tipo, 
-    //podemos nos aproveitar da inferência da linguagem usando a trait Into
+    // Com a trait From definida para o nosso tipo,
     let int = 5;
     // Try removing the type declaration
     let num: Number = int.into();
     println!("My number is {:?}", num);
-}*/
+}

@@ -1,10 +1,10 @@
 /*
-Rust has two different types of constants which can be declared in any scope including global. 
+Rust has two different types of constants which can be declared in any scope including global.
 Both require explicit type annotation:
 
 const: An unchangeable value (the common case).
-static: A possibly mutable variable with 'static lifetime. 
-The static lifetime is inferred and does not have to be specified. 
+static: A possibly mutable variable with 'static lifetime.
+The static lifetime is inferred and does not have to be specified.
 Accessing or modifying a mutable static variable is unsafe.
 */
 
@@ -92,7 +92,7 @@ fn main() {
     let shadowed_binding = 2;
     println!("shadowed in outer block: {}", shadowed_binding);
 
-    //It's possible to declare variable bindings first, and initialize them later. 
+    //It's possible to declare variable bindings first, and initialize them later.
     // However, this form is seldom used, as it may lead to the use of uninitialized variables.
     // Declare a variable binding
     let a_binding;
@@ -108,7 +108,7 @@ fn main() {
 
     let another_binding;
 
-    // Error! Use of uninitialized binding
+    // Error! Use o''f'' uninitialized binding
     //println!("another binding: {}", another_binding);
     // FIXME ^ Comment out this line
 
