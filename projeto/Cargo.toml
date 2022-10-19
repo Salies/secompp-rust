@@ -16,4 +16,4 @@ version = "0.1.0-rc.2"
 features = ["diesel_sqlite_pool"] # mágico, não precisa importar o sqlite3!
 
 [default.databases]
-sqlite_logs = { url = "data.db" }
+sqlite_data = { url = "data.db" }

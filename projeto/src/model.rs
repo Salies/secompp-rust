@@ -2,7 +2,6 @@ use diesel::{Insertable, Queryable};
 use rocket::serde::{Deserialize, Serialize};
 use schema::artists;
 use chrono::NaiveDateTime;
-use crate::DbConn;
 
 // Se algum desses fosse Nullable seria Option
 /*
