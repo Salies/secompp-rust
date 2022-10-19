@@ -1,8 +1,12 @@
 [package]
-name = "music_app"
+name = "music_api"
 version = "0.1.0"
 edition = "2021"
+authors = ["Daniel Serezane <daniel.serezane@unesp.br>"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+libsqlite3-sys = { version = "0.25.1", features = ["bundled"]}
+diesel = { version = "2.0.0", features = ["sqlite"] }
+dotenvy = "0.15"
