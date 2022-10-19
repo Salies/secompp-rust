@@ -20,7 +20,7 @@ fn get_user_input() -> String {
                     string_from_stdin = String::new();
                     continue;
                 }
-                trimmed.to_string();
+                return trimmed.to_string();
             }
             Err(..) => {
                 println!("Please type a number between 0-100 and press enter:");
