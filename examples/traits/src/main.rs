@@ -1,9 +1,9 @@
 struct Ovelha {
     pelada: bool,
-    nome: &'static str
+    nome: &'static str,
 }
 
-trait Animal{
+trait Animal {
     // Não é um construtor...
     // Self refere-se ao implementador (Animal ou algum herdeiro de Animal)
     fn new(nome: &'static str) -> Self;
@@ -47,7 +47,10 @@ impl Animal for Ovelha {
     // Self, do trait original, é o tipo do implementador
     // No caso, Ovelha
     fn new(nome: &'static str) -> Ovelha {
-        Ovelha {nome: nome, pelada: false}
+        Ovelha {
+            nome: nome,
+            pelada: false,
+        }
     }
 
     fn nome(&self) -> &'static str {
@@ -75,7 +78,6 @@ fn main() {
     //let mut minha_outra_ovelha = Ovelha::new("Shaun");
     // Isso não funciona
     //let mut minha_ovelha = Animal::new("Shaun");
-
 }
 
 /*
