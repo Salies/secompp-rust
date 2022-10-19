@@ -1,7 +1,8 @@
-use diesel;
-use diesel::prelude::*;
+use diesel::{Insertable, Queryable};
+use rocket::serde::{Deserialize, Serialize};
 use schema::artists;
 use chrono::NaiveDateTime;
+use crate::DbConn;
 
 // Se algum desses fosse Nullable seria Option
 /*
@@ -10,7 +11,7 @@ tratar aqui, tratar no front...
 só tô dizendo pra vocês não acharem que ORM no Rust não tem atributo opcional,
 é igualzinho em qualquer outra linguagem, só que né, tem as chatices do Rust
 */
-#[derive(Queryable)]
+#[derive(Queryable, Serialize)]
 pub struct Album {
     pub id: u32,
     pub artist: String,
@@ -20,7 +21,7 @@ pub struct Album {
     pub release_date: NaiveDateTime
 }
 
-#[derive(Insertable)]
+#[derive(Insertable, Deserialize)]
 #[table_name = "albums"]
 pub struct NewAlbum {
     pub artist: String,
