@@ -1,0 +1,20 @@
+[package]
+name = "music_api"
+version = "0.1.0"
+edition = "2021"
+authors = ["Daniel Serezane <daniel.serezane@unesp.br>"]
+
+[dependencies]
+diesel = {version = "1.4.7", features = ["chrono"]}
+chrono = { version = "0.4", features = ["serde"] }
+
+[dependencies.rocket]
+version = "0.5.0-rc.1"
+features = ["json"]
+
+[dependencies.rocket_sync_db_pools]
+version = "0.1.0-rc.1"
+features = ["diesel_postgres_pool"]
+
+[global.databases]
+data = { url = "postgres://postgres:ak47ss@localhost:5432/data" }
