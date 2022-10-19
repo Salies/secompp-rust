@@ -10,7 +10,7 @@ def get_user_input() -> str:
     while True:
         string_from_stdin = input() 
         trimmed = string_from_stdin.strip()
-        try:
+        try: # try to convert to int
             parsed = int(trimmed)
             if parsed < 0 or parsed > 100:
                 print("Please type a number between 0-100 and press enter:")
