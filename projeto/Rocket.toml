@@ -1,2 +1,2 @@
 [global.databases]
-data = { url = "postgres://postgres:ak47ss@localhost:5432/data" }
+data = { url = "postgres://postgres:senha@localhost:5432/nome_do_banco" }
