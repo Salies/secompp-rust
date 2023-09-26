@@ -1,2 +1,0 @@
-[global.databases]
-data = { url = "postgres://postgres:senha@localhost:5432/nome_do_banco" }
