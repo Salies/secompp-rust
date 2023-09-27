@@ -47,7 +47,6 @@ impl Animal for Ave {
 
 fn main() {
     let mut minha_ave: Ave = Animal::new("Urubu do Pix");
-    // E se a gente tirar a especificação de tipo?
     
     minha_ave.falar();
     minha_ave.debicar();
