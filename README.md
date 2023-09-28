@@ -1,2 +1,2 @@
 # secompp-rust
-Minicurso de Rust para a SECOMPP22.
+Minicurso de Rust para a SECOMPP23.
