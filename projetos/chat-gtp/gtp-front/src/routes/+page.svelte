@@ -1,3 +1,63 @@
+<script>
+    let chatArea, chatInput, fileinput;
+
+    // Função que manda adiciona um item ao chat e manda a mensagem para o servidor
+    const send = async () => {
+        const response = await fetch('http://127.0.0.1:3000/msg', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                msg: chatInput
+            })
+        });
+
+        const chatItem = document.createElement('div');
+        chatItem.classList.add('chat-item');
+        chatItem.textContent = chatInput;
+        chatArea.appendChild(chatItem);
+
+        // if response == 1, add class comunista
+        const responseJson = await response.json();
+        if (responseJson.response == 1) {
+            chatItem.classList.add('comunista');
+        }
+
+        // Clear input
+        chatInput = '';
+    }
+
+    const onFileSelected = async (e) => {
+        let image = e.target.files[0];
+		let reader = new FileReader();
+		reader.readAsDataURL(image);
+		reader.onload = async (e) => {
+			const imgStr = e.target.result;
+
+            const imgItem = document.createElement('img');
+            imgItem.src = imgStr;
+
+            const response = await fetch('http://127.0.0.1:3000/msg', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    msg: imgStr
+                })
+            });
+
+            const responseJson = await response.json();
+            if (responseJson.response == 1) {
+                imgItem.classList.add('comunista-img');
+            }
+
+            chatArea.appendChild(imgItem);
+		};
+    }
+</script>
+
 <title>Detector de comunistas</title>
 
 <main>
@@ -6,18 +66,17 @@
         <img src="/eagle.png" alt="favicon" width="64" height="64" />
         Detector de comunistas
     </header>
-    <div class="chat-area">
-        <div class="chat-item"></div>
-    </div>
+    <div class="chat-area" bind:this={chatArea}/>
     <div class=chatbar>
-        <input type="text" placeholder="Transcreva uma mensagem..." />
-        <button><img src="/img.png" alt="Adicionar imagem" width=32></button>
-        <button><img src="/send.png" alt="Enviar" width=32></button>
+        <input type="text" placeholder="Transcreva uma mensagem..." bind:value={chatInput}/>
+        <button on:click={()=>{fileinput.click();}}><img src="/img.png" alt="Adicionar imagem" width=32></button>
+        <button on:click={send}><img src="/send.png" alt="Enviar" width=32></button>
+        <input style="display:none" type="file" accept=".jpg, .jpeg, .png" on:change={onFileSelected} bind:this={fileinput} >
     </div>
 </main>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Work+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Work+Sans:wght@400;700&display=swap');
 
 main {
     background-color:rgb(192, 245, 236);
@@ -27,6 +86,7 @@ main {
     border-radius: 20px;
     overflow: auto;
     padding-bottom: 20px;
+    font-family: 'Work Sans', sans-serif;
 }
 
 header {
@@ -69,7 +129,6 @@ header img {
     width:80%;
     height: 100%;
     padding: 0 20px;
-    font-family: 'Work Sans', sans-serif;
     font-size: 1.2em;
     border-radius: 20px 0 0 20px;
 }
@@ -81,7 +140,6 @@ header img {
     height: 100%;
     background-color: rgb(104, 21, 21);
     color: #fff;
-    font-family: 'Work Sans', sans-serif;
     font-size: 1.2em;
     display: flex;
     justify-content: center;
@@ -95,6 +153,25 @@ header img {
 .chatbar button:hover {
     cursor: pointer;
     background-color: rgb(54, 15, 15)
+}
+
+:global(.chat-item) {
+    background-color: #fff;
+    padding:20px;
+    margin-bottom: 10px;
+}
+
+:global(.chat-item:last-of-type) {
+    margin-bottom: 0;
+}
+
+:global(.comunista) {
+    font-weight: 700;
+    color: #ff0000;
+}
+
+:global(.comunista-img) {
+    border: 4px solid #ff0000;
 }
 
 </style>

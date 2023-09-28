@@ -4,8 +4,12 @@ const app = express();
 const jsonParser = bodyParser.json();
 const port = 3000;
 const net = require('net');
+const cors = require('cors');
 
-app.get('/msg', jsonParser, (req, res) => {
+app.use(cors());
+
+app.post('/msg', jsonParser, (req, res) => {
+  console.log(req.body.msg)
     const client = new net.Socket();
   
     client.connect(8080, '127.0.0.1');
