@@ -1,10 +1,10 @@
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
+use std::time::Duration;
 use std::thread;
 
 use rodio::source::{SineWave, Source};
 use rodio::{OutputStream, Sink};
-use std::time::Duration;
 
 fn handle_client(mut stream: TcpStream) {
     let mut buffer = [0; 1];
@@ -18,13 +18,19 @@ fn handle_client(mut stream: TcpStream) {
 
     while let Ok(_) = stream.read(&mut buffer) {
         // map C para 261.63 Hz, e assim por diante
+        // dava pra fazer um HashMap aqui, mas não aprendemos isso no curso
         let note: f32 = match buffer[0] {
             b'c' => 261.63,
+            b'1' => 277.18,
             b'd' => 293.66,
+            b'2' => 311.13,
             b'e' => 329.63,
             b'f' => 349.23,
+            b'3' => 369.99,
             b'g' => 392.00,
+            b'4' => 415.30,
             b'a' => 440.00,
+            b'5' => 466.16,
             b'b' => 493.88,
             _ => 0.0,
         };
