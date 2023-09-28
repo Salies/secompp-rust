@@ -1,7 +1,7 @@
 use std::io::stdin;
 
 fn main() {
-    let furry_words = vec![
+    let furry_words = [
         "furry", "felpudo", "paw", "sonic", "shadow", "ouriço", "e621",
         "scalie", "fursuit", "uwu", "catgirl", "fluffy", "yiff", "owo"
     ];
