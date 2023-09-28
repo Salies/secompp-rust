@@ -1,5 +1,7 @@
+use std::io::{Read, Write, BufRead, BufReader};
+use std::net::{TcpListener, TcpStream};
+use std::thread;
 use std::fs::File;
-use std::io::{BufRead, BufReader};
 
 struct Patterns {
     chat_patterns: Vec<String>,
@@ -46,14 +48,70 @@ impl Patterns {
         }
         false
     }
+}
 
-    fn print_one(&self) {
-        println!("{}", self.img_patterns[1]);
+fn handle_client(mut stream: TcpStream) {
+    // Criando um buffer, tamanho padrão.
+    let mut buffer = [0; 1024];
+
+    // Instanciando o nosso detector de padrões para atender esse cliente.
+    let pattern_matcher = Patterns::new("chat.txt", "img.txt");
+
+    // Lendo os bytes recebidos.
+    match stream.read(&mut buffer) {
+        Ok(_) => {
+            // Convertendo os bytes para string.
+            if let Ok(data) = String::from_utf8(buffer.to_vec()) {
+                println!("Recebido: {}", data);
+
+                // Como sabemos que está tudo certo (viva tratamento de erros do Rust!)
+                // podemos verificar a string com o nosso detector de padrões.
+                let mut response = "0";
+
+                // Se a string começa com data:image/jpeg;base64, então é uma imagem.
+                if data.starts_with("data:image/jpeg;base64,") {
+                    // Verificando a imagem.
+                    if pattern_matcher.check_img(&data) {
+                        response = "1";
+                    }
+                }
+                // Se não for uma imagem, então é um chat.
+                else {
+                    // Verificando o chat.
+                    if pattern_matcher.check_string(&data) {
+                        response = "1";
+                    }
+                }
+
+                // Mandando uma resposta.
+                if let Err(e) = stream.write_all(response.as_bytes()) {
+                    eprintln!("Erro ao enviar resposta: {}", e);
+                }
+            }
+        }
+        Err(e) => {
+            eprintln!("Erro ao ler do cliente: {}", e);
+        }
     }
 }
 
 fn main() {
-    println!("Hello, world!");
-    let patterns = Patterns::new("chat.txt", "img.txt");
-    patterns.print_one();
+    let listener = TcpListener::bind("127.0.0.1:8080").expect("Endereço não disponível.");
+
+    println!("Servidor rodando em 127.0.0.1:8080");
+
+    // Accept connections and spawn a new thread for each one.
+    for stream in listener.incoming() {
+        match stream {
+            Ok(stream) => {
+                // Spawn a new thread to handle the client.
+                thread::spawn(move || {
+                    handle_client(stream);
+                });
+            }
+            Err(e) => {
+                eprintln!("Erro para aceitar conexão: {}", e);
+            }
+        }
+    }
 }
