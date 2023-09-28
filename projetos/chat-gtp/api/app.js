@@ -1,25 +1,30 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const app = express()
-const jsonParser = bodyParser.json()
-const port = 3000
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+const jsonParser = bodyParser.json();
+const port = 3000;
+const net = require('net');
 
-app.post('/msg', jsonParser, (req, res) => {
-    // print what the client sends
-    console.log(req.body.msg)
-
-    // send ok
-    res.sendStatus(200)
-})
-
-app.post('/img', (req, res) => {
-    // print what the client sends
-    console.log(req.body.msg)
-
-    // send ok
-    res.sendStatus(200)
-})
+app.get('/msg', jsonParser, (req, res) => {
+    const client = new net.Socket();
+  
+    client.connect(8080, '127.0.0.1');
+  
+    client.on('error', (err) => {
+      console.error('Error in socket:', err);
+      client.end();
+      res.status(500).send('Error in socket connection');
+    });
+  
+    client.on('data', (data) => {
+      res.status(200).json({ response: data.toString() });
+  
+      client.end();
+    });
+  
+    client.write(req.body.msg);
+  });
 
 app.listen(port, () => {
-    console.log(`API ouvindo na porta ${port}.`)
-})
+  console.log(`API ouvindo na porta ${port}.`);
+});
