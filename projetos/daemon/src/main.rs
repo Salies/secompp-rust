@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io::BufReader;
-use rodio::{Decoder, OutputStream, Sink, source::Source};
+use rodio::{Decoder, OutputStream, Sink};
 
 struct Player {
     sink: Sink,
@@ -27,8 +27,17 @@ impl Player {
     fn pause(&mut self) {
         self.sink.pause();
     }
+
+    fn resume(&mut self) {
+        self.sink.play();
+    }
 }
 
 fn main() {
-    println!("Hello, world!");
+    let mut my_player = Player::new();
+    my_player.play("music.mp3");
+    std::thread::sleep(std::time::Duration::from_secs(5));
+    my_player.pause();
+    std::thread::sleep(std::time::Duration::from_secs(5));
+    my_player.resume();
 }
