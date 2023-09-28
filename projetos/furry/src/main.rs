@@ -8,7 +8,8 @@ fn main() {
 
     loop {
         let mut user_input = String::new();
-        stdin().read_line(&mut user_input).unwrap();
+        stdin().read_line(&mut user_input)
+        .expect("Erro ao ler entrada do usuário!");
         for word in &furry_words {
             if user_input.to_lowercase().contains(word) {
                 println!("Furry detectado!");
