@@ -1,43 +1,58 @@
-use std::fs::File;
-use std::io::BufReader;
-use rodio::{Decoder, OutputStream, Sink};
+use std::io::{Read, Write};
+use std::net::{TcpListener, TcpStream};
+use std::thread;
 
-struct Player {
-    sink: Sink,
-}
+use rodio::source::{SineWave, Source};
+use rodio::{OutputStream, Sink};
+use std::time::Duration;
 
-impl Player {
-    fn new() -> Self {
-        let (_stream, stream_handle) = OutputStream::try_default().unwrap();
-        let sink = Sink::try_new(&stream_handle).unwrap();
-        Player {
-            sink,
-        }
-    }
+fn handle_client(mut stream: TcpStream) {
+    let mut buffer = [0; 1];
 
-    // Toca música a partir de um arquivo (str)
-    fn play(&mut self, file: &str) {
-        let file = File::open(file).unwrap();
-        let source = Decoder::new(BufReader::new(file)).unwrap();
-        self.sink.clear();
-        self.sink.append(source);
-        self.sink.play();
-    }
+    // Nada de unwrap! Viva Rust.
+    let (_stream, stream_handle) = OutputStream::try_default()
+        .expect("Falha ao criar stream. Cheque se o dispositivo de saída está disponível.");
 
-    fn pause(&mut self) {
-        self.sink.pause();
-    }
+    let sink = Sink::try_new(&stream_handle)
+        .expect("Falha ao criar sink. Cheque se o dispositivo de saída está disponível.");
 
-    fn resume(&mut self) {
-        self.sink.play();
+    while let Ok(_) = stream.read(&mut buffer) {
+        // map C para 261.63 Hz, e assim por diante
+        let note: f32 = match buffer[0] {
+            b'c' => 261.63,
+            b'd' => 293.66,
+            b'e' => 329.63,
+            b'f' => 349.23,
+            b'g' => 392.00,
+            b'a' => 440.00,
+            b'b' => 493.88,
+            _ => 0.0,
+        };
+
+        let wave = SineWave::new(note);
+        let source = wave.take_duration(Duration::from_secs_f32(0.25));
+        sink.append(source);
+        sink.sleep_until_end();
+
+        // send response ok
+        stream.write(b"ok").expect("Deu ruim!");
     }
 }
 
 fn main() {
-    let mut my_player = Player::new();
-    my_player.play("music.mp3");
-    std::thread::sleep(std::time::Duration::from_secs(5));
-    my_player.pause();
-    std::thread::sleep(std::time::Duration::from_secs(5));
-    my_player.resume();
+    let listener = TcpListener::bind("127.0.0.1:8080")
+        .expect("Não foi possível iniciar o servidor na porta 8080.");
+
+    for stream in listener.incoming() {
+        match stream {
+            Ok(stream) => {
+                thread::spawn(|| {
+                    handle_client(stream);
+                });
+            }
+            Err(e) => {
+                eprintln!("Error: {}", e);
+            }
+        }
+    }
 }
